@@ -1,0 +1,21 @@
+# Frontend (React/Vite)
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# Backend (.NET)
+backend/bin/
+backend/obj/
+backend/appsettings.Development.json
+
+# Variables de entorno / secretos
+.env
+*.env.local
+
+# VS Code
+.vscode/
+
+# Sistema
+.DS_Store
+Thumbs.db
