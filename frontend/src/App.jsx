@@ -1,10 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login'
+import AdminHome from './pages/AdminHome'
 import ProtectedRoute from './components/ProtectedRoute'
-
-function AdminHome() {
-  return <h2>Backoffice — bienvenida, Karla</h2>
-}
 
 function App() {
   return (
