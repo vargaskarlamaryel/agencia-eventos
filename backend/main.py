@@ -11,6 +11,17 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+from fastapi import Request
+from fastapi.responses import JSONResponse
+import traceback
+
+@app.exception_handler(Exception)
+async def manejador_global(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"error": str(exc), "traceback": traceback.format_exc()},
+    )
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
