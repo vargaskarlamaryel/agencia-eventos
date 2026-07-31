@@ -4,10 +4,11 @@ frontend/dist/
 frontend/.env
 frontend/.env.local
 
-# Backend (.NET)
-backend/bin/
-backend/obj/
-backend/appsettings.Development.json
+# Backend (Python)
+backend/venv/
+backend/.env
+backend/__pycache__/
+backend/*.pyc
 
 # Variables de entorno / secretos
 .env
