@@ -1,19 +1,26 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../services/supabaseClient'
+import { login as loginRequest } from '../services/api'
+import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const navigate = useNavigate()
+  const { login } = useAuth()
 
   const handleLogin = async (e) => {
     e.preventDefault()
     setError('')
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) return setError('Correo o contraseña incorrectos')
-    navigate('/admin')
+
+    try {
+      const data = await loginRequest(email, password)
+      login(data.access_token)
+      navigate('/admin')
+    } catch {
+      setError('Correo o contraseña incorrectos')
+    }
   }
 
   return (
