@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { login as loginRequest } from '../services/api'
 import { useAuth } from '../context/AuthContext'
+import { useNavigate, Link } from 'react-router-dom'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -40,6 +40,10 @@ export default function Login() {
         {error && <p className="error">{error}</p>}
 
         <button type="submit">Ingresar</button>
+
+        <p className="auth-switch">
+          ¿No tienes cuenta? <Link to="/registro">Regístrate</Link>
+        </p>
       </form>
     </div>
   )

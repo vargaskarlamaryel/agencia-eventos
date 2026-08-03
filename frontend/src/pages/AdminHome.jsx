@@ -1,5 +1,6 @@
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export default function AdminHome() {
   const { logout } = useAuth()
@@ -16,8 +17,8 @@ export default function AdminHome() {
         <h2 style={styles.logo}>Backoffice</h2>
         <nav style={styles.nav}>
           <span style={styles.navItemActive}>Inicio</span>
-          <span style={styles.navItem}>Salones</span>
-          <span style={styles.navItem}>Servicios</span>
+          <Link to="/admin/salones" style={{ ...styles.navItem, textDecoration: 'none' }}>Salones</Link>
+          <Link to="/admin/servicios" style={{ ...styles.navItem, textDecoration: 'none' }}>Servicios</Link>
         </nav>
       </aside>
 

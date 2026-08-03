@@ -89,3 +89,115 @@ input, button {
   font-weight: 600;
   cursor: pointer;
 }
+
+.section-title { font-size: 18px; font-weight: 600; margin: 0 0 16px; }
+
+.crud-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.crud-form input {
+  flex: 1;
+  min-width: 140px;
+  padding: 9px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.crud-form select {
+  padding: 9px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+.crud-form-actions { display: flex; gap: 8px; }
+
+.crud-form button,
+.crud-table-actions button {
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-secondary { background: var(--color-surface) !important; color: var(--color-text) !important; border: 1px solid var(--color-border) !important; }
+.btn-danger { background: var(--color-danger) !important; }
+
+.crud-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.crud-table th, .crud-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 14px;
+}
+
+.crud-table-actions { display: flex; gap: 6px; }
+
+.catalogo-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.catalogo-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.catalogo-header h1 { font-size: 32px; margin: 0 0 8px; }
+.catalogo-header p { color: #666; margin: 0; }
+
+.catalogo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.catalogo-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+
+.catalogo-card h3 { margin: 0 0 8px; font-size: 16px; }
+.catalogo-capacidad, .catalogo-categoria { color: #666; font-size: 13px; margin: 0 0 6px; text-transform: capitalize; }
+.catalogo-descripcion { font-size: 14px; margin: 0 0 10px; }
+.catalogo-precio { font-weight: 700; font-size: 18px; color: var(--color-primary); margin: 0; }
+
+.catalogo-estado { text-align: center; padding: 60px 20px; font-size: 16px; color: #666; }
+.catalogo-estado.error { color: var(--color-danger); }
+
+.auth-switch {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.auth-switch a {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
