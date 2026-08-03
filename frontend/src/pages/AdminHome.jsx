@@ -24,10 +24,15 @@ export default function AdminHome() {
 
       <main style={styles.main}>
         <header style={styles.header}>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <Link to="/catalogo" style={{ ...styles.logoutButton, textDecoration: 'none', display: 'inline-block' }}>
+              Ver catálogo
+            </Link>
+            <button onClick={handleLogout} style={styles.logoutButton}>
+              Cerrar sesión
+            </button>
+          </div>
           <h1 style={styles.title}>Panel de administración</h1>
-          <button onClick={handleLogout} style={styles.logoutButton}>
-            Cerrar sesión
-          </button>
         </header>
         <div style={styles.content}>
           <p style={{ color: 'var(--color-text-muted)' }}>
