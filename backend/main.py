@@ -3,9 +3,12 @@ from database import engine, Base
 from routers import auth
 from routers import salones
 from routers import servicios
+from routers import reservas
 import models.servicio
 import models.salon  # para que SQLAlchemy registre la tabla
 import models.usuario  # necesario para que SQLAlchemy registre el modelo
+import models.reserva
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -29,6 +32,8 @@ app.include_router(auth.router)
 app.include_router(salones.router)
 
 app.include_router(servicios.router)
+
+app.include_router(reservas.router)
 
 from fastapi import Depends
 from auth.dependencies import get_current_user

@@ -107,3 +107,13 @@ export function eliminarServicio(id, token) {
     method: 'DELETE',
   })
 }
+
+export async function crearReserva(reserva) {
+  const res = await fetch(`${API_URL}/reservas/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(reserva),
+  })
+  if (!res.ok) throw new Error('No se pudo enviar la solicitud')
+  return res.json()
+}
