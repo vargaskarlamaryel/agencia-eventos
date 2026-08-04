@@ -19,6 +19,7 @@ export default function AdminHome() {
           <span style={styles.navItemActive}>Inicio</span>
           <Link to="/admin/salones" style={{ ...styles.navItem, textDecoration: 'none' }}>Salones</Link>
           <Link to="/admin/servicios" style={{ ...styles.navItem, textDecoration: 'none' }}>Servicios</Link>
+          <Link to="/admin/reservas" style={{ ...styles.navItem, textDecoration: 'none' }}>Reservaciones</Link>
         </nav>
       </aside>
 

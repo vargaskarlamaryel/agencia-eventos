@@ -6,6 +6,7 @@ import AdminSalones from './pages/AdminSalones'
 import AdminServicios from './pages/AdminServicios'
 import CatalogoPublico from './pages/CatalogoPublico'
 import Registro from './pages/Registro'
+import AdminReservas from './pages/AdminReservas'
 
 function App() {
   return (
@@ -36,6 +37,15 @@ function App() {
           element={
             <ProtectedRoute>
               <AdminServicios />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/reservas"
+          element={
+            <ProtectedRoute>
+              <AdminReservas />
             </ProtectedRoute>
           }
         />

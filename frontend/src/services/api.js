@@ -117,3 +117,9 @@ export async function crearReserva(reserva) {
   if (!res.ok) throw new Error('No se pudo enviar la solicitud')
   return res.json()
 }
+
+export function listarReservas(token) {
+  return authFetch(`${API_URL}/reservas/`, token, {
+    method: 'GET',
+  })
+}
