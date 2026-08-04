@@ -7,8 +7,9 @@ import {
     eliminarSalon,
 } from '../services/api'
 import { Link } from 'react-router-dom'
+import { supabase } from '../services/supabaseClient'
 
-const vacio = { nombre: '', capacidad: '', precio: '', descripcion: '' }
+const vacio = { nombre: '', capacidad: '', precio: '', descripcion: '', imagen_url: '' }
 
 export default function AdminSalones() {
     const { token } = useAuth()
@@ -16,6 +17,8 @@ export default function AdminSalones() {
     const [form, setForm] = useState(vacio)
     const [editandoId, setEditandoId] = useState(null)
     const [error, setError] = useState('')
+    const [archivo, setArchivo] = useState(null)
+    const [subiendo, setSubiendo] = useState(false)
 
     const cargar = async () => {
         try {
@@ -33,6 +36,20 @@ export default function AdminSalones() {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
 
+    const subirImagen = async () => {
+        if (!archivo) return form.imagen_url || null
+
+        const nombreArchivo = `${Date.now()}-${archivo.name}`
+        const { error } = await supabase.storage
+            .from('imagenes')
+            .upload(nombreArchivo, archivo)
+
+        if (error) throw new Error('Error al subir la imagen')
+
+        const { data } = supabase.storage.from('imagenes').getPublicUrl(nombreArchivo)
+        return data.publicUrl
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         setError('')
@@ -46,24 +63,31 @@ export default function AdminSalones() {
             return
         }
 
-        const datos = {
-            nombre: form.nombre,
-            capacidad: Number(form.capacidad),
-            precio: Number(form.precio),
-            descripcion: form.descripcion || null,
-        }
-
         try {
+            setSubiendo(true)
+            const imagenUrl = await subirImagen()
+
+            const datos = {
+                nombre: form.nombre,
+                capacidad: Number(form.capacidad),
+                precio: Number(form.precio),
+                descripcion: form.descripcion || null,
+                imagen_url: imagenUrl,
+            }
+
             if (editandoId) {
                 await actualizarSalon(editandoId, datos, token)
             } else {
                 await crearSalon(datos, token)
             }
             setForm(vacio)
+            setArchivo(null)
             setEditandoId(null)
             cargar()
         } catch {
             setError('No se pudo guardar el salón')
+        } finally {
+            setSubiendo(false)
         }
     }
 
@@ -73,6 +97,7 @@ export default function AdminSalones() {
             capacidad: salon.capacidad,
             precio: salon.precio,
             descripcion: salon.descripcion || '',
+            imagen_url: salon.imagen_url || '',
         })
         setEditandoId(salon.id)
     }
@@ -89,6 +114,7 @@ export default function AdminSalones() {
 
     const cancelarEdicion = () => {
         setForm(vacio)
+        setArchivo(null)
         setEditandoId(null)
     }
 
@@ -104,11 +130,14 @@ export default function AdminSalones() {
                 <input name="capacidad" type="number" placeholder="Capacidad" value={form.capacidad} onChange={handleChange} />
                 <input name="precio" type="number" step="0.01" placeholder="Precio" value={form.precio} onChange={handleChange} />
                 <input name="descripcion" placeholder="Descripción (opcional)" value={form.descripcion} onChange={handleChange} />
+                <input type="file" accept="image/*" onChange={(e) => setArchivo(e.target.files[0])} />
 
                 {error && <p className="error">{error}</p>}
 
                 <div className="crud-form-actions">
-                    <button type="submit">{editandoId ? 'Guardar cambios' : 'Crear salón'}</button>
+                    <button type="submit" disabled={subiendo}>
+                        {subiendo ? 'Guardando...' : editandoId ? 'Guardar cambios' : 'Crear salón'}
+                    </button>
                     {editandoId && (
                         <button type="button" className="btn-secondary" onClick={cancelarEdicion}>
                             Cancelar
@@ -120,6 +149,7 @@ export default function AdminSalones() {
             <table className="crud-table">
                 <thead>
                     <tr>
+                        <th>Imagen</th>
                         <th>Nombre</th>
                         <th>Capacidad</th>
                         <th>Precio</th>
@@ -130,6 +160,11 @@ export default function AdminSalones() {
                 <tbody>
                     {salones.map((s) => (
                         <tr key={s.id}>
+                            <td>
+                                {s.imagen_url && (
+                                    <img src={s.imagen_url} alt={s.nombre} style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: 6 }} />
+                                )}
+                            </td>
                             <td>{s.nombre}</td>
                             <td>{s.capacidad}</td>
                             <td>${s.precio}</td>

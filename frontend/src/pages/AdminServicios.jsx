@@ -7,8 +7,9 @@ import {
     eliminarServicio,
 } from '../services/api'
 import { Link } from 'react-router-dom'
+import { supabase } from '../services/supabaseClient'
 
-const vacio = { nombre: '', categoria: 'mobiliario', precio: '' }
+const vacio = { nombre: '', categoria: 'mobiliario', precio: '', imagen_url: '' }
 const CATEGORIAS = ['mobiliario', 'dj', 'buffet']
 
 export default function AdminServicios() {
@@ -17,6 +18,8 @@ export default function AdminServicios() {
     const [form, setForm] = useState(vacio)
     const [editandoId, setEditandoId] = useState(null)
     const [error, setError] = useState('')
+    const [archivo, setArchivo] = useState(null)
+    const [subiendo, setSubiendo] = useState(false)
 
     const cargar = async () => {
         try {
@@ -34,6 +37,20 @@ export default function AdminServicios() {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
 
+    const subirImagen = async () => {
+        if (!archivo) return form.imagen_url || null
+
+        const nombreArchivo = `${Date.now()}-${archivo.name}`
+        const { error } = await supabase.storage
+            .from('imagenes')
+            .upload(nombreArchivo, archivo)
+
+        if (error) throw new Error('Error al subir la imagen')
+
+        const { data } = supabase.storage.from('imagenes').getPublicUrl(nombreArchivo)
+        return data.publicUrl
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         setError('')
@@ -47,23 +64,30 @@ export default function AdminServicios() {
             return
         }
 
-        const datos = {
-            nombre: form.nombre,
-            categoria: form.categoria,
-            precio: Number(form.precio),
-        }
-
         try {
+            setSubiendo(true)
+            const imagenUrl = await subirImagen()
+
+            const datos = {
+                nombre: form.nombre,
+                categoria: form.categoria,
+                precio: Number(form.precio),
+                imagen_url: imagenUrl,
+            }
+
             if (editandoId) {
                 await actualizarServicio(editandoId, datos, token)
             } else {
                 await crearServicio(datos, token)
             }
             setForm(vacio)
+            setArchivo(null)
             setEditandoId(null)
             cargar()
         } catch {
             setError('No se pudo guardar el servicio')
+        } finally {
+            setSubiendo(false)
         }
     }
 
@@ -72,6 +96,7 @@ export default function AdminServicios() {
             nombre: servicio.nombre,
             categoria: servicio.categoria,
             precio: servicio.precio,
+            imagen_url: servicio.imagen_url || '',
         })
         setEditandoId(servicio.id)
     }
@@ -88,6 +113,7 @@ export default function AdminServicios() {
 
     const cancelarEdicion = () => {
         setForm(vacio)
+        setArchivo(null)
         setEditandoId(null)
     }
 
@@ -106,11 +132,14 @@ export default function AdminServicios() {
                     ))}
                 </select>
                 <input name="precio" type="number" step="0.01" placeholder="Precio" value={form.precio} onChange={handleChange} />
+                <input type="file" accept="image/*" onChange={(e) => setArchivo(e.target.files[0])} />
 
                 {error && <p className="error">{error}</p>}
 
                 <div className="crud-form-actions">
-                    <button type="submit">{editandoId ? 'Guardar cambios' : 'Crear servicio'}</button>
+                    <button type="submit" disabled={subiendo}>
+                        {subiendo ? 'Guardando...' : editandoId ? 'Guardar cambios' : 'Crear servicio'}
+                    </button>
                     {editandoId && (
                         <button type="button" className="btn-secondary" onClick={cancelarEdicion}>
                             Cancelar
@@ -122,6 +151,7 @@ export default function AdminServicios() {
             <table className="crud-table">
                 <thead>
                     <tr>
+                        <th>Imagen</th>
                         <th>Nombre</th>
                         <th>Categoría</th>
                         <th>Precio</th>
@@ -131,6 +161,11 @@ export default function AdminServicios() {
                 <tbody>
                     {servicios.map((s) => (
                         <tr key={s.id}>
+                            <td>
+                                {s.imagen_url && (
+                                    <img src={s.imagen_url} alt={s.nombre} style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: 6 }} />
+                                )}
+                            </td>
                             <td>{s.nombre}</td>
                             <td>{s.categoria}</td>
                             <td>${s.precio}</td>

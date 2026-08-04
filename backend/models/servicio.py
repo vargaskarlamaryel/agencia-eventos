@@ -8,3 +8,4 @@ class Servicio(Base):
     nombre = Column(String, nullable=False)
     categoria = Column(String, nullable=False)  # mobiliario, dj, buffet
     precio = Column(Numeric(10, 2), nullable=False)
+    imagen_url = Column(String, nullable=True)

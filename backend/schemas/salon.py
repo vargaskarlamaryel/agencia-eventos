@@ -5,6 +5,7 @@ class SalonBase(BaseModel):
     capacidad: int
     precio: float
     descripcion: str | None = None
+    imagen_url: str | None = None
 
 class SalonCreate(SalonBase):
     pass

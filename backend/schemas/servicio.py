@@ -4,6 +4,7 @@ class ServicioBase(BaseModel):
     nombre: str
     categoria: str
     precio: float
+    imagen_url: str | None = None
 
 class ServicioCreate(ServicioBase):
     pass

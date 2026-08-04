@@ -9,3 +9,4 @@ class Salon(Base):
     capacidad = Column(Integer, nullable=False)
     precio = Column(Numeric(10, 2), nullable=False)
     descripcion = Column(String, nullable=True)
+    imagen_url = Column(String, nullable=True)
